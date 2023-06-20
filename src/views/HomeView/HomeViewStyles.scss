@@ -1,0 +1,37 @@
+.home-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 50px auto 0;
+  border-radius: 25px;
+  width: 100%;
+  max-width: 1200px;
+  padding: 1rem;
+}
+
+.search-section {
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 1rem;
+}
+
+input {
+  position: sticky;
+  top: 80px;
+  display: block;
+  width: fit-content;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  z-index: 2;
+}
+
+.meals {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 1rem;
+}
