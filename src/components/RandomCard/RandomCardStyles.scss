@@ -4,6 +4,10 @@ $shadow-color: rgba(0, 0, 0, 0.1);
 $shadow-hover-color: rgba(0, 0, 0, 0.25);
 $dark-color: #666;
 
+.card-container {
+  scale:95%;
+}
+
 .title {
   font-size: 1.5rem;
   color: #333;
@@ -13,7 +17,6 @@ $dark-color: #666;
 }
 
 .card {
-  margin-top: 1rem;
   padding: 20px;
   border-radius: 16px;
   background-color: #fff;
