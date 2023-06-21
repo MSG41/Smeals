@@ -7,7 +7,7 @@
     </div>
 
     <div class="meals" v-if="searchQuery">
-      <MealCard v-for="meal in meals" :key="meal.idMeal" :meal="meal" />
+      <MealCard v-for="meal in filteredMeals" :key="meal.idMeal" :meal="meal" />
     </div>
 
     <div v-if="isLoading" class="loading">Loading...</div>
@@ -15,11 +15,11 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue'
+import { computed } from 'vue'
+import { useHomeStore } from '@/stores/store'
 import MealCard from '@/components/MealCard/MealCard.vue'
 import RandomCard from '@/components/RandomCard/RandomCard.vue'
 import Search from '@/components/Search/Search.vue'
-import type { Meal } from '@/types/types'
 
 export default {
   components: {
@@ -27,16 +27,22 @@ export default {
     RandomCard,
     Search
   },
-
   setup() {
-    const meals = ref<Meal[]>([])
-      const searchQuery = ref('')
-    const isLoading = ref(false)
+    const store = useHomeStore()
+
+    const filteredMeals = computed(() => {
+      if (store.searchQuery) {
+        return store.meals.filter((meal) =>
+          meal.name?.toLowerCase().includes(store.searchQuery.toLowerCase())
+        )
+      }
+      return store.meals
+    })
 
     return {
-      meals,
-      searchQuery,
-      isLoading
+      searchQuery: store.searchQuery,
+      filteredMeals,
+      isLoading: store.isLoading
     }
   }
 }
