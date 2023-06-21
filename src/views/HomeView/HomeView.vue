@@ -1,6 +1,6 @@
 <template>
   <div class="home-view">
-    <input v-model="searchQuery" placeholder="Search meals..." />
+    <Search v-model="searchQuery" />
 
     <div v-if="!searchQuery">
       <RandomCard />
@@ -15,41 +15,28 @@
 </template>
 
 <script lang="ts">
-import { ref, watch } from 'vue'
-import { searchMeal } from '@/services/mealService'
+import { ref } from 'vue'
 import MealCard from '@/components/MealCard/MealCard.vue'
 import RandomCard from '@/components/RandomCard/RandomCard.vue'
+import Search from '@/components/Search/Search.vue'
 import type { Meal } from '@/types/types'
 
 export default {
   components: {
     MealCard,
-    RandomCard
+    RandomCard,
+    Search
   },
 
   setup() {
     const meals = ref<Meal[]>([])
+      const searchQuery = ref('')
     const isLoading = ref(false)
-    const searchQuery = ref('')
-
-    const fetchMeals = async () => {
-      if (searchQuery.value.trim() === '') return
-      isLoading.value = true
-      try {
-        meals.value = await searchMeal(searchQuery.value)
-      } catch (error) {
-        console.error('Failed to fetch meals:', error)
-      } finally {
-        isLoading.value = false
-      }
-    }
-
-    watch(searchQuery, fetchMeals, { immediate: true })
 
     return {
       meals,
-      isLoading,
-      searchQuery
+      searchQuery,
+      isLoading
     }
   }
 }
