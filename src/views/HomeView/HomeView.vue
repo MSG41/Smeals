@@ -1,16 +1,27 @@
 <template>
   <div class="home-view">
-    <Search v-model="searchQuery" />
+    <Search v-model="store.searchQuery" />
 
-    <div v-if="!searchQuery">
+    <div class="filter-dropdowns">
+      <FilterDropdowns />
+    </div>
+
+    <div v-if="!store.searchQuery && !hasFiltersSelected">
       <RandomCard />
     </div>
 
-    <div class="meals" v-if="searchQuery">
-      <MealCard v-for="meal in filteredMeals" :key="meal.idMeal" :meal="meal" />
+    <div class="meals" v-if="store.searchQuery || hasFiltersSelected">
+      <MealCard
+        v-for="meal in filteredMeals"
+        :key="meal.idMeal"
+        :meal="meal"
+        :selectedArea="store.selectedArea"
+        :selectedIngredient="store.selectedIngredient"
+        :selectedCategory="store.selectedCategory"
+      />
     </div>
 
-    <div v-if="isLoading" class="loading">Loading...</div>
+    <div v-if="store.isLoading" class="loading">Loading...</div>
   </div>
 </template>
 
@@ -20,12 +31,14 @@ import { useHomeStore } from '@/stores/store'
 import MealCard from '@/components/MealCard/MealCard.vue'
 import RandomCard from '@/components/RandomCard/RandomCard.vue'
 import Search from '@/components/Search/Search.vue'
+import FilterDropdowns from '@/components/FilterDropdowns/FilterDropdowns.vue'
 
 export default {
   components: {
     MealCard,
     RandomCard,
-    Search
+    Search,
+    FilterDropdowns,
   },
   setup() {
     const store = useHomeStore()
@@ -39,12 +52,16 @@ export default {
       return store.meals
     })
 
+    const hasFiltersSelected = computed(() => {
+      return store.selectedArea !== '' || store.selectedIngredient !== '' || store.selectedCategory !== ''
+    })
+
     return {
-      searchQuery: store.searchQuery,
+      store,
       filteredMeals,
-      isLoading: store.isLoading
+      hasFiltersSelected,
     }
-  }
+  },
 }
 </script>
 
