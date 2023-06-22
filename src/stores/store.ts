@@ -1,8 +1,6 @@
-
-// One consistent source of fetching data from the server. 
+// One consistent source of fetching data from the server.
 
 // This approach is more maintainable because it concentrates all the data-fetching logic in the store and uses the store as the single source of truth for data.
-
 
 import { defineStore } from 'pinia'
 import {
@@ -79,7 +77,15 @@ export const useHomeStore = defineStore('home', {
           return
         }
 
-        const meals = await searchMeal(query)
+        let meals: Meal[] = []
+        if (this.selectedArea || this.selectedCategory) {
+          const lowerCaseQuery = query.toLowerCase()
+          meals = this.meals.filter((meal) => meal.strMeal.toLowerCase().includes(lowerCaseQuery))
+        } else {
+          // If no filters are selected, fetch all meals matching the search query
+          meals = await searchMeal(query)
+        }
+
         this.meals = meals
       } catch (error) {
         console.error('Failed to search meals:', error)
