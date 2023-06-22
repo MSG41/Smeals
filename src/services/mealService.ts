@@ -36,15 +36,14 @@ export async function filterMeals(params: Record<string, string>) {
   try {
     const response = await axios.get(`${baseURL}/filter.php`, {
       params
-    });
-    const meals = response.data.meals || [];
-    return meals;
+    })
+    const meals = response.data.meals || []
+    return meals
   } catch (error) {
-    console.error('Failed to fetch filtered meals:', error);
-    throw new Error('Failed to fetch filtered meals');
+    console.error('Failed to fetch filtered meals:', error)
+    throw new Error('Failed to fetch filtered meals')
   }
 }
-
 
 export async function getMealDetails(id: string) {
   try {
@@ -62,20 +61,6 @@ export async function getMealDetails(id: string) {
   } catch (error) {
     console.error('Failed to fetch meal details:', error)
     throw new Error('Failed to fetch meal details')
-  }
-}
-
-export async function getMealByName(name: string) {
-  try {
-    const meals = await searchMeal(name)
-    if (meals.length > 0) {
-      return meals[0]
-    } else {
-      throw new Error('No meals found with this name')
-    }
-  } catch (error) {
-    console.error(`Failed to fetch meal with name ${name}:`, error)
-    throw new Error(`Failed to fetch meal with name ${name}`)
   }
 }
 

@@ -1,5 +1,16 @@
+// One consistent source of fetching data from the server.
+
+// This approach is more maintainable because it concentrates all the data-fetching logic in the store and uses the store as the single source of truth for data.
+
 import { defineStore } from 'pinia'
-import { getAreas, getCategories, filterMeals } from '@/services/mealService'
+import {
+  getAreas,
+  getCategories,
+  filterMeals,
+  filterByArea,
+  filterByCategory
+} from '@/services/mealService'
+import { searchMeal } from '@/services/mealService'
 import type { Meal } from '@/types/types'
 
 export const useHomeStore = defineStore('home', {
@@ -26,19 +37,58 @@ export const useHomeStore = defineStore('home', {
     async fetchMeals() {
       this.isLoading = true
       try {
-        const params: Record<string, string> = {}
+        const meals: Meal[] = []
 
-        if (this.selectedCategory) {
-          params.c = this.selectedCategory
+        if (this.selectedCategory && this.selectedArea) {
+          // Fetch meals filtered by category
+          const categoryMeals = await filterByCategory(this.selectedCategory)
+
+          // Fetch meals filtered by area
+          const areaMeals = await filterByArea(this.selectedArea)
+
+          // Find the meals that match both category and area
+          for (const meal of categoryMeals) {
+            if (areaMeals.some((areaMeal: Meal) => areaMeal.idMeal === meal.idMeal)) {
+              meals.push(meal)
+            }
+          }
+        } else if (this.selectedCategory) {
+          meals.push(...(await filterByCategory(this.selectedCategory)))
+        } else if (this.selectedArea) {
+          meals.push(...(await filterByArea(this.selectedArea)))
+        } else {
+          // No category or area selected, fetch all meals
+          meals.push(...(await filterMeals({})))
         }
 
-        if (this.selectedArea) {
-          params.a = this.selectedArea
-        }
-
-        this.meals = await filterMeals(params)
+        this.meals = meals
       } catch (error) {
         console.error('Failed to fetch meals:', error)
+      } finally {
+        this.isLoading = false
+      }
+    },
+
+    async searchMeals(query: string) {
+      this.isLoading = true
+      try {
+        if (query.trim() === '') {
+          this.fetchMeals()
+          return
+        }
+
+        let meals: Meal[] = []
+        if (this.selectedArea || this.selectedCategory) {
+          const lowerCaseQuery = query.toLowerCase()
+          meals = this.meals.filter((meal) => meal.strMeal.toLowerCase().includes(lowerCaseQuery))
+        } else {
+          // If no filters are selected, fetch all meals matching the search query
+          meals = await searchMeal(query)
+        }
+
+        this.meals = meals
+      } catch (error) {
+        console.error('Failed to search meals:', error)
       } finally {
         this.isLoading = false
       }
