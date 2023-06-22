@@ -1,96 +1,67 @@
 <template>
-    <div class="filter-dropdowns">
-      <div class="dropdown-wrapper">
-        <div class="dropdown-header">
-          <i class="dropdown-icon"></i>
-        </div>
-        <select v-model="selectedArea" @change="updateArea">
-          <option value="">AREA</option>
-          <option v-for="area in areas" :key="area" :value="area">{{ area }}</option>
-        </select>
+  <div class="filter-dropdowns">
+    Use Separately (for now)
+    <div class="dropdown-wrapper">
+      <div class="dropdown-header">
+        <i class="dropdown-icon"></i>
       </div>
-      <div class="dropdown-wrapper">
-        <div class="dropdown-header">
-          <i class="dropdown-icon"></i>
-        </div>
-        <select v-model="selectedIngredient" @change="updateIngredient">
-          <option value="">INGREDIENT</option>
-          <option v-for="ingredient in ingredients" :key="ingredient" :value="ingredient">{{ ingredient }}</option>
-        </select>
-      </div>
-      <div class="dropdown-wrapper">
-        <div class="dropdown-header">
-          <i class="dropdown-icon"></i>
-        </div>
-        <select v-model="selectedCategory" @change="updateCategory">
-          <option value="">CATEGORY</option>
-          <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
-        </select>
-      </div>
+      <select :value="selectedArea" @change="updateArea">
+        <option value="">AREA</option>
+        <option v-for="area in areas" :key="area" :value="area">{{ area }}</option>
+      </select>
     </div>
-  </template>
-  
-  <script lang="ts">
-  import { ref, watch, onMounted } from 'vue'
-  import { useHomeStore } from '../../stores/store'
-  
-  export default {
-    name: 'FilterDropdowns',
-    setup() {
-      const store = useHomeStore()
-      const selectedArea = ref('')
-      const selectedIngredient = ref('')
-      const selectedCategory = ref('')
-  
-      const fetchData = async () => {
-        await Promise.all([
-          store.fetchAreas(),
-          store.fetchIngredients(),
-          store.fetchCategories()
-        ])
-        selectedArea.value = store.selectedArea || ''
-        selectedIngredient.value = store.selectedIngredient || ''
-        selectedCategory.value = store.selectedCategory || ''
+    <div class="dropdown-wrapper">
+      <div class="dropdown-header">
+        <i class="dropdown-icon"></i>
+      </div>
+      <select :value="selectedCategory" @change="updateCategory">
+        <option value="">CATEGORY</option>
+        <option v-for="category in categories" :key="category" :value="category">
+          {{ category }}
+        </option>
+      </select>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { useHomeStore } from '@/stores/store'
+
+export default {
+  name: 'FilterDropdowns',
+  props: ['selectedArea', 'selectedCategory'],
+  emits: ['updateArea', 'updateCategory'],
+  setup(props, { emit }) {
+    const store = useHomeStore()
+
+    const updateArea = (event: Event) => {
+      const selectElement = event.target as HTMLSelectElement | null
+      if (selectElement && selectElement.value !== props.selectedArea) {
+        const selectedValue = selectElement.value
+        store.setSelectedArea(selectedValue)
+        emit('updateArea', selectedValue)
       }
-  
-      // Watch for changes in the store and fetch data once the store is available
-      watch(() => store, async () => {
-        await fetchData()
-      })
-  
-      const updateArea = () => {
-        store.setSelectedArea(selectedArea.value)
+    }
+
+    const updateCategory = (event: Event) => {
+      const selectElement = event.target as HTMLSelectElement | null
+      if (selectElement && selectElement.value !== props.selectedCategory) {
+        const selectedValue = selectElement.value
+        store.setSelectedCategory(selectedValue)
+        emit('updateCategory', selectedValue)
       }
-  
-      const updateIngredient = () => {
-        store.setSelectedIngredient(selectedIngredient.value)
-      }
-  
-      const updateCategory = () => {
-        store.setSelectedCategory(selectedCategory.value)
-      }
-  
-      // Fetch data when the component is mounted
-      onMounted(async () => {
-        await fetchData()
-      })
-  
-      return {
-        areas: store.areas,
-        ingredients: store.ingredients,
-        categories: store.categories,
-        selectedArea,
-        selectedIngredient,
-        selectedCategory,
-        updateArea,
-        updateIngredient,
-        updateCategory
-      }
-    },
+    }
+
+    return {
+      areas: store.areas,
+      categories: store.categories,
+      updateArea,
+      updateCategory
+    }
   }
-  </script>
-  
-  <style scoped lang="scss">
-  @import './FilterDropdownsStyles.scss';
-  </style>
-  
+}
+</script>
+
+<style scoped lang="scss">
+@import './FilterDropdownsStyles.scss';
+</style>

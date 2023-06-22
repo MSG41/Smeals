@@ -1,16 +1,15 @@
 <template>
-  <div class="card-container">
+  <div v-if="meal" class="card-container">
     <div class="card">
-      <div v-if="meal" class="meal-card">
+      <div class="meal-card">
         <router-link :to="`/meal/${meal.idMeal}`">
           <img :src="meal.strMealThumb" :alt="meal.strMeal" />
         </router-link>
 
         <div class="meal-details">
           <h2>{{ meal.strMeal }}</h2>
-          <div class="category-pill">{{meal.strCategory || selectedCategory }}</div>
-          <div class="area-pill">{{ meal.strArea || selectedArea}}</div>
-          <div class="ingredient-pill">{{ meal.strIngredient1 || selectedIngredient }}</div>
+          <div class="category-pill">{{ mealDetails.category }}</div>
+          <div class="area-pill">{{ mealDetails.area }}</div>
         </div>
       </div>
     </div>
@@ -18,10 +17,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref, onMounted } from 'vue'
 import type { PropType } from 'vue'
 import type { Meal } from '@/types/types'
-
+import { getMealDetails } from '@/services/mealService'
 
 export default defineComponent({
   name: 'MealCard',
@@ -29,19 +28,30 @@ export default defineComponent({
     meal: {
       type: Object as PropType<Meal>,
       required: true
-    },
-    selectedArea: {
-      type: String,
-      required: true
-    },
-    selectedIngredient: {
-      type: String,
-      required: true
-    },
-    selectedCategory: {
-      type: String,
-      required: true
-    } 
+    }
+  },
+  setup(props) {
+    const mealDetails = ref({
+      category: props.meal.strCategory || '',
+      area: props.meal.strArea || ''
+    })
+
+    // Fetch meal details on component mount
+    onMounted(async () => {
+      try {
+        if (!props.meal.strCategory || !props.meal.strArea) {
+          const updatedMeal = await getMealDetails(props.meal.idMeal)
+          mealDetails.value.category = updatedMeal.strCategory || ''
+          mealDetails.value.area = updatedMeal.strArea || ''
+        }
+      } catch (error) {
+        console.error('Failed to fetch meal details:', error)
+      }
+    })
+
+    return {
+      mealDetails
+    }
   }
 })
 </script>

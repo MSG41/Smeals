@@ -32,6 +32,20 @@ export async function searchMeal(query: string) {
   }
 }
 
+export async function filterMeals(params: Record<string, string>) {
+  try {
+    const response = await axios.get(`${baseURL}/filter.php`, {
+      params
+    });
+    const meals = response.data.meals || [];
+    return meals;
+  } catch (error) {
+    console.error('Failed to fetch filtered meals:', error);
+    throw new Error('Failed to fetch filtered meals');
+  }
+}
+
+
 export async function getMealDetails(id: string) {
   try {
     const response = await axios.get(`${baseURL}/lookup.php`, {
@@ -84,7 +98,6 @@ export async function fetchMealById(id: string) {
   }
 }
 
-
 // Adding the lists for the areas and the ingredients (to populate the dropdowns).
 export async function getAreas() {
   try {
@@ -93,26 +106,11 @@ export async function getAreas() {
         a: 'list'
       }
     })
-    const areas = response.data.meals.map((meal: {strArea: string}) => meal.strArea)
+    const areas = response.data.meals.map((meal: { strArea: string }) => meal.strArea)
     return areas || []
   } catch (error) {
     console.error('Failed to fetch areas:', error)
     throw new Error('Failed to fetch areas')
-  }
-}
-
-export async function getIngredients() {
-  try {
-    const response = await axios.get(`${baseURL}/list.php`, {
-      params: {
-        i: 'list'
-      }
-    })
-    const ingredients = response.data.meals.map((meal: {strIngredient: string}) => meal.strIngredient)
-    return ingredients || []
-  } catch (error) {
-    console.error('Failed to fetch ingredients:', error)
-    throw new Error('Failed to fetch ingredients')
   }
 }
 
@@ -131,9 +129,6 @@ export async function getCategories() {
   }
 }
 
-
-
-
 // Filtering by area and ingredient.
 export async function filterByArea(area: string) {
   try {
@@ -147,21 +142,6 @@ export async function filterByArea(area: string) {
   } catch (error) {
     console.error(`Failed to fetch meals from area ${area}:`, error)
     throw new Error(`Failed to fetch meals from area ${area}`)
-  }
-}
-
-export async function filterByIngredient(ingredient: string) {
-  try {
-    const response = await axios.get(`${baseURL}/filter.php`, {
-      params: {
-        i: ingredient
-      }
-    })
-    const meals = response.data.meals || []
-    return meals
-  } catch (error) {
-    console.error(`Failed to fetch meals with ingredient ${ingredient}:`, error)
-    throw new Error(`Failed to fetch meals with ingredient ${ingredient}`)
   }
 }
 
