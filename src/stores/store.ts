@@ -1,3 +1,9 @@
+
+// One consistent source of fetching data from the server. 
+
+// This approach is more maintainable because it concentrates all the data-fetching logic in the store and uses the store as the single source of truth for data.
+
+
 import { defineStore } from 'pinia'
 import {
   getAreas,
@@ -6,6 +12,7 @@ import {
   filterByArea,
   filterByCategory
 } from '@/services/mealService'
+import { searchMeal } from '@/services/mealService'
 import type { Meal } from '@/types/types'
 
 export const useHomeStore = defineStore('home', {
@@ -59,6 +66,23 @@ export const useHomeStore = defineStore('home', {
         this.meals = meals
       } catch (error) {
         console.error('Failed to fetch meals:', error)
+      } finally {
+        this.isLoading = false
+      }
+    },
+
+    async searchMeals(query: string) {
+      this.isLoading = true
+      try {
+        if (query.trim() === '') {
+          this.fetchMeals()
+          return
+        }
+
+        const meals = await searchMeal(query)
+        this.meals = meals
+      } catch (error) {
+        console.error('Failed to search meals:', error)
       } finally {
         this.isLoading = false
       }
