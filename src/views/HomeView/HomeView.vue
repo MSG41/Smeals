@@ -1,32 +1,38 @@
 <template>
   <div class="home-view">
-    <Search v-model="store.searchQuery" />
+    <Search />
 
-    <div class="filter-dropdowns">
-      <FilterDropdowns />
+    <div class="filter-dropdowns" v-if="isDataLoaded">
+      <FilterDropdowns
+        :selectedArea="store.selectedArea"
+        :selectedCategory="store.selectedCategory"
+        @updateArea="store.setSelectedArea"
+        @updateCategory="store.setSelectedCategory"
+      />
     </div>
 
-    <div v-if="!store.searchQuery && !hasFiltersSelected">
-      <RandomCard />
-    </div>
+    <div v-if="!hasResults && isDataLoaded" class="no-results">No results found.</div>
 
-    <div class="meals" v-if="store.searchQuery || hasFiltersSelected">
+    <div v-if="hasResults && !shouldShowRandomCard">
       <MealCard
-        v-for="meal in filteredMeals"
+        v-for="meal in store.meals"
         :key="meal.idMeal"
         :meal="meal"
-        :selectedArea="store.selectedArea"
-        :selectedIngredient="store.selectedIngredient"
-        :selectedCategory="store.selectedCategory"
+        :category="meal.strCategory"
+        :area="meal.strArea"
       />
     </div>
 
     <div v-if="store.isLoading" class="loading">Loading...</div>
+
+    <div v-if="shouldShowRandomCard">
+      <RandomCard />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useHomeStore } from '@/stores/store'
 import MealCard from '@/components/MealCard/MealCard.vue'
 import RandomCard from '@/components/RandomCard/RandomCard.vue'
@@ -38,30 +44,37 @@ export default {
     MealCard,
     RandomCard,
     Search,
-    FilterDropdowns,
+    FilterDropdowns
   },
   setup() {
     const store = useHomeStore()
-
-    const filteredMeals = computed(() => {
-      if (store.searchQuery) {
-        return store.meals.filter((meal) =>
-          meal.name?.toLowerCase().includes(store.searchQuery.toLowerCase())
-        )
-      }
-      return store.meals
+    const hasResults = computed(() => {
+      return store.meals.length > 0
     })
 
-    const hasFiltersSelected = computed(() => {
-      return store.selectedArea !== '' || store.selectedIngredient !== '' || store.selectedCategory !== ''
+    const isDataLoaded = ref(false)
+
+    onMounted(async () => {
+      await store.fetchData()
+      isDataLoaded.value = true
+    })
+
+    const shouldShowRandomCard = computed(() => {
+      return (
+        !hasResults.value &&
+        isDataLoaded.value &&
+        store.selectedArea === '' &&
+        store.selectedCategory === ''
+      )
     })
 
     return {
       store,
-      filteredMeals,
-      hasFiltersSelected,
+      hasResults,
+      isDataLoaded,
+      shouldShowRandomCard
     }
-  },
+  }
 }
 </script>
 

@@ -4,17 +4,13 @@ export interface Meal {
   strMealThumb: string
   strYoutube: string | null
   strInstructions: string
+  strArea: string
+  strCategory: string
   [key: string]: string | null
 }
 
-// Define Area interface
 export interface Area {
   strArea: string
-}
-
-// Define Ingredient interface
-export interface Ingredient {
-  strIngredient1: string
 }
 
 export interface Category {

@@ -5,7 +5,7 @@ $shadow-hover-color: rgba(0, 0, 0, 0.25);
 $dark-color: #666;
 
 .card-container {
-  scale:95%;
+  transform: scale(0.95);
 }
 
 .title {
@@ -37,6 +37,7 @@ $dark-color: #666;
   font-weight: bold;
   margin-bottom: 1rem;
 }
+
 .category-pill,
 .area-pill {
   display: inline-block;
@@ -46,12 +47,13 @@ $dark-color: #666;
   border-radius: 16px;
   font-size: 0.75rem;
   margin-bottom: 0.5rem;
-  margin-right: 0.5rem; /* Added spacing between pills horizontally */
+  margin-right: 0.5rem;
 }
 
 .card:hover {
   box-shadow: 0px 30px 100px -10px $shadow-hover-color;
 }
+
 .card a:hover {
   background-color: transparent;
 }

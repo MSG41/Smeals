@@ -1,5 +1,5 @@
 <template>
-  <div class="card-container">
+   <div v-if="randomMeal" class="card-container">
     <div class="card">
       <h1 class="title">Random meal</h1>
       <div v-if="randomMeal" class="meal-card">
