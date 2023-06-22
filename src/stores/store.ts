@@ -1,5 +1,11 @@
 import { defineStore } from 'pinia'
-import { getAreas, getCategories, filterMeals } from '@/services/mealService'
+import {
+  getAreas,
+  getCategories,
+  filterMeals,
+  filterByArea,
+  filterByCategory
+} from '@/services/mealService'
 import type { Meal } from '@/types/types'
 
 export const useHomeStore = defineStore('home', {
@@ -26,17 +32,31 @@ export const useHomeStore = defineStore('home', {
     async fetchMeals() {
       this.isLoading = true
       try {
-        const params: Record<string, string> = {}
+        const meals: Meal[] = []
 
-        if (this.selectedCategory) {
-          params.c = this.selectedCategory
+        if (this.selectedCategory && this.selectedArea) {
+          // Fetch meals filtered by category
+          const categoryMeals = await filterByCategory(this.selectedCategory)
+
+          // Fetch meals filtered by area
+          const areaMeals = await filterByArea(this.selectedArea)
+
+          // Find the meals that match both category and area
+          for (const meal of categoryMeals) {
+            if (areaMeals.some((areaMeal: Meal) => areaMeal.idMeal === meal.idMeal)) {
+              meals.push(meal)
+            }
+          }
+        } else if (this.selectedCategory) {
+          meals.push(...(await filterByCategory(this.selectedCategory)))
+        } else if (this.selectedArea) {
+          meals.push(...(await filterByArea(this.selectedArea)))
+        } else {
+          // No category or area selected, fetch all meals
+          meals.push(...(await filterMeals({})))
         }
 
-        if (this.selectedArea) {
-          params.a = this.selectedArea
-        }
-
-        this.meals = await filterMeals(params)
+        this.meals = meals
       } catch (error) {
         console.error('Failed to fetch meals:', error)
       } finally {
