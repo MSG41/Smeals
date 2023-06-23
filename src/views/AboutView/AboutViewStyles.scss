@@ -1,0 +1,44 @@
+.about {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+  color: #333333;
+  max-width: 800px;
+  margin: 90px auto;
+  padding: 40px;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.about h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.about p {
+  margin-bottom: 16px;
+  text-align: justify;
+  line-height: 1.6;
+}
+
+.highlight {
+  background-color: #ffcc00;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+@media (max-width: 600px) {
+  .about {
+    font-size: 18px;
+    padding: 20px;
+    margin: 90px auto;
+  }
+
+  .about h1 {
+    font-size: 28px;
+  }
+}

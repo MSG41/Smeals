@@ -17,12 +17,6 @@ const router = createRouter({
       component: () => import('../views/AboutView/AboutView.vue')
     },
     {
-      path: '/salim',
-      name: 'salim',
-      // Lazy loading of this view or page when the route is visited.
-      component: () => import('../views/SalimView/SalimView.vue')
-    },
-    {
       path: '/meal/:id',
       name: 'meal-detail',
       component: () => import('../views/MealDetailView/MealDetailView.vue'),
