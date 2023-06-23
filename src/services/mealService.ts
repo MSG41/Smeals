@@ -1,4 +1,4 @@
-// A set of functions that interact with an external API (The Meal DB API) to fetch meal-related data. 
+// A set of functions that interact with an external API (The Meal DB API) to fetch meal-related data.
 import axios from 'axios'
 
 const baseURL = 'https://www.themealdb.com/api/json/v1/1'
@@ -51,26 +51,6 @@ export async function filterMeals(params: Record<string, string>) {
 
 // Fetches details of a specific meal by ID
 export async function getMealDetails(id: string) {
-  try {
-    const response = await axios.get(`${baseURL}/lookup.php`, {
-      params: {
-        i: id
-      }
-    })
-    const meal = response.data.meals?.[0]
-    if (meal) {
-      return meal
-    } else {
-      throw new Error('No meal details found')
-    }
-  } catch (error) {
-    console.error('Failed to fetch meal details:', error)
-    throw new Error('Failed to fetch meal details')
-  }
-}
-
-// Fetches details of a specific meal by ID (alternate function name)
-export async function fetchMealById(id: string) {
   try {
     const response = await axios.get(`${baseURL}/lookup.php`, {
       params: {

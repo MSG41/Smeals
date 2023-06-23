@@ -29,7 +29,7 @@
 <script lang="ts">
 import { onMounted, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { fetchMealById } from '@/services/mealService'
+import { getMealDetails } from '@/services/mealService'
 import type { Meal } from '@/types/types'
 
 export default {
@@ -64,14 +64,14 @@ export default {
 
       const mealId = Array.isArray(id) ? id[0] : id
       try {
-        const fetchedMeal = await fetchMealById(mealId)
+        const fetchedMeal = await getMealDetails(mealId)
         meal.value = fetchedMeal ?? null
       } catch (error) {
         console.error(`Failed to fetch meal with ID ${mealId}:`, error)
         meal.value = null
       }
     }
-
+    6
     onMounted(fetchMeal)
 
     return { meal, ingredients }
