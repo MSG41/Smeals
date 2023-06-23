@@ -1,5 +1,5 @@
 <template>
-   <div v-if="randomMeal" class="card-container">
+  <div v-if="randomMeal" class="card-container">
     <div class="card">
       <h1 class="title">Random meal</h1>
       <div v-if="randomMeal" class="meal-card">
@@ -19,20 +19,19 @@
 
 <script lang="ts">
 import { onMounted, ref } from 'vue'
-import { getRandomMeal } from '@/services/mealService'
+import { useHomeStore } from '@/stores/store'
 import type { Meal } from '@/types/types'
 
 export default {
   name: 'RandomCard',
 
   setup() {
+    const store = useHomeStore()
     const randomMeal = ref<Meal | null>(null)
 
     const fetchRandomMeal = async () => {
       try {
-        const meal = await getRandomMeal()
-        console.log('Random meal:', meal)
-        randomMeal.value = meal
+        randomMeal.value = await store.fetchRandomMeal()
       } catch (error) {
         console.error('Failed to fetch random meal:', error)
       }

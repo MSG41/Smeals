@@ -2,7 +2,6 @@
 <template>
   <div class="search-container">
     <input class="search-input" v-model="searchQuery" placeholder="Search meals..." />
-    <div v-if="isLoading" class="loading">Loading...</div>
   </div>
 </template>
 

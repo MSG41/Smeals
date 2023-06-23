@@ -1,6 +1,6 @@
 <template>
   <div class="filter-dropdowns">
-    Use Separately (for now)
+    FILTER BY:
     <div class="dropdown-wrapper">
       <div class="dropdown-header">
         <i class="dropdown-icon"></i>
