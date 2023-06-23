@@ -1,4 +1,4 @@
-// One consistent source of fetching data from the server.
+// One consistent source of truth.
 
 // This approach is more maintainable because it concentrates all the data-fetching logic in the store and uses the store as the single source of truth for data.
 
