@@ -1,19 +1,19 @@
 <template>
   <div class="home-view">
-    <Search />
-
-    <div class="filter-dropdowns" v-if="isDataLoaded">
-      <FilterDropdowns
-        :selectedArea="store.selectedArea"
-        :selectedCategory="store.selectedCategory"
-        @updateArea="store.setSelectedArea"
-        @updateCategory="store.setSelectedCategory"
-      />
+    <div class="header">
+      <img src="@/assets/banner.jpg" alt="Cooking Recipes" class="banner-image" />
+      <Search class="search-bar" />
+      <div class="filter-dropdowns" v-if="isDataLoaded">
+        <FilterDropdowns
+          :selectedArea="store.selectedArea"
+          :selectedCategory="store.selectedCategory"
+          @updateArea="store.setSelectedArea"
+          @updateCategory="store.setSelectedCategory"
+        />
+      </div>
     </div>
 
-    <div v-if="!hasResults && isDataLoaded" class="no-results">No results found.</div>
-
-    <div v-if="hasResults && !shouldShowRandomCard">
+    <div class="meals-container" v-if="hasResults && !shouldShowRandomCard">
       <MealCard
         v-for="meal in store.meals"
         :key="meal.idMeal"
@@ -22,8 +22,6 @@
         :area="meal.strArea"
       />
     </div>
-
-    <div v-if="store.isLoading" class="loading">Loading...</div>
 
     <div v-if="shouldShowRandomCard">
       <RandomCard />

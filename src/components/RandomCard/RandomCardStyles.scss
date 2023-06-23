@@ -5,7 +5,18 @@ $shadow-hover-color: rgba(0, 0, 0, 0.25);
 $dark-color: #666;
 
 .card-container {
+  position: relative;
+  top: -170px;
   transform: scale(0.95);
+  width: fit-content;
+  margin: auto;
+}
+@media (max-width: 768px) {
+  .card-container {
+    top: -20px;
+    transform: none;
+    margin-top: 30px;
+  }
 }
 
 .title {
@@ -60,7 +71,7 @@ $dark-color: #666;
 
 .meal-card img {
   max-width: 100%;
-  max-height: 20rem;
+  max-height: 15rem;
   border-radius: 25px;
 }
 

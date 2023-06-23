@@ -8,7 +8,8 @@ import {
   getCategories,
   filterMeals,
   filterByArea,
-  filterByCategory
+  filterByCategory,
+  getRandomMeal
 } from '@/services/mealService'
 import { searchMeal } from '@/services/mealService'
 import type { Meal } from '@/types/types'
@@ -23,6 +24,19 @@ export const useHomeStore = defineStore('home', {
     selectedCategory: ''
   }),
   actions: {
+    async fetchRandomMeal(): Promise<Meal | null> {
+      this.isLoading = true
+      try {
+        const meal = await getRandomMeal()
+        return meal ?? null
+      } catch (error) {
+        console.error('Failed to fetch random meal:', error)
+        return null
+      } finally {
+        this.isLoading = false
+      }
+    },
+
     async fetchData() {
       this.isLoading = true
       try {

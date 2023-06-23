@@ -1,47 +1,63 @@
-$color-text: #333;
-$color-border: #ccc;
+$color-text: #37474f;
+$color-hover: #ffb74d;
+$color-active: #ff9800;
 
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.25rem;
+  padding: 0.25rem 2rem;
   position: fixed;
   top: 0;
   width: 100%;
-  max-height:80px;
+  max-height: 80px;
   z-index: 3;
-  background: white;
+  backdrop-filter: blur(20px);
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);
 }
 
 .logo {
   display: block;
+  // I wanted to make my logo appear orange. It was originally pink, but my wife prefers orange. So, here is a simple way to do it.
+  filter: hue-rotate(90deg);
 }
 
-nav {
+.nav {
   display: flex;
-}
-
-nav a.router-link-exact-active {
-  color: $color-text;
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
 }
 
 nav a {
   text-decoration: none;
   padding: 0 1rem;
-  border-left: 1px solid $color-border;
+  border-left: 1px solid #ccc;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    color: #ff7f50;
+    background-color: #fff;
+  }
 }
 
-nav a:first-of-type {
-  border: 0;
+.nav-link {
+  text-decoration: none;
+  color: $color-text;
+  font-size: 1rem;
+  padding: 0 1rem;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: $color-hover;
+}
+
+.nav-link.router-link-exact-active {
+  color: $color-active;
 }
 
 @media (min-width: 1024px) {
-  header {
+  .header {
     flex-direction: row;
   }
 
