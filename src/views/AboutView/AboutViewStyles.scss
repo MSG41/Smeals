@@ -3,7 +3,7 @@
   font-size: 20px;
   color: #333333;
   max-width: 800px;
-  margin: 90px auto;
+  margin: 100px auto;
   padding: 40px;
   background-color: #f9f9f9;
   border-radius: 12px;
@@ -21,7 +21,7 @@
 
 .about p {
   margin-bottom: 16px;
-  text-align: justify;
+  text-align: left;
   line-height: 1.6;
 }
 
@@ -34,7 +34,7 @@
 @media (max-width: 600px) {
   .about {
     font-size: 18px;
-    padding: 20px;
+    padding: 40px;
     margin: 90px auto;
   }
 
