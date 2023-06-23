@@ -6,15 +6,14 @@ $dark-color: #666;
 
 .card-container {
   position: relative;
-  top: -170px;
+  top: -160px;
   transform: scale(0.95);
   width: fit-content;
   margin: auto;
 }
-@media (max-width: 768px) {
+@media (max-width: 666px) {
   .card-container {
     top: -20px;
-    transform: none;
     margin-top: 30px;
   }
 }
