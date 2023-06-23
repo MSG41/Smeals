@@ -1,7 +1,9 @@
+// A set of functions that interact with an external API (The Meal DB API) to fetch meal-related data. 
 import axios from 'axios'
 
 const baseURL = 'https://www.themealdb.com/api/json/v1/1'
 
+// Fetches a random meal from the server
 export async function getRandomMeal() {
   try {
     const response = await axios.get(`${baseURL}/random.php`)
@@ -17,6 +19,7 @@ export async function getRandomMeal() {
   }
 }
 
+// Searches for meals based on a query
 export async function searchMeal(query: string) {
   try {
     const response = await axios.get(`${baseURL}/search.php`, {
@@ -32,6 +35,7 @@ export async function searchMeal(query: string) {
   }
 }
 
+// Fetches meals based on filter parameters
 export async function filterMeals(params: Record<string, string>) {
   try {
     const response = await axios.get(`${baseURL}/filter.php`, {
@@ -45,6 +49,7 @@ export async function filterMeals(params: Record<string, string>) {
   }
 }
 
+// Fetches details of a specific meal by ID
 export async function getMealDetails(id: string) {
   try {
     const response = await axios.get(`${baseURL}/lookup.php`, {
@@ -64,6 +69,7 @@ export async function getMealDetails(id: string) {
   }
 }
 
+// Fetches details of a specific meal by ID (alternate function name)
 export async function fetchMealById(id: string) {
   try {
     const response = await axios.get(`${baseURL}/lookup.php`, {
@@ -83,7 +89,7 @@ export async function fetchMealById(id: string) {
   }
 }
 
-// Adding the lists for the areas and the ingredients (to populate the dropdowns).
+// Fetches the list of areas
 export async function getAreas() {
   try {
     const response = await axios.get(`${baseURL}/list.php`, {
@@ -99,6 +105,7 @@ export async function getAreas() {
   }
 }
 
+// Fetches the list of categories
 export async function getCategories() {
   try {
     const response = await axios.get(`${baseURL}/list.php`, {
@@ -114,7 +121,7 @@ export async function getCategories() {
   }
 }
 
-// Filtering by area and ingredient.
+// Filters meals by area
 export async function filterByArea(area: string) {
   try {
     const response = await axios.get(`${baseURL}/filter.php`, {
@@ -130,6 +137,7 @@ export async function filterByArea(area: string) {
   }
 }
 
+// Filters meals by category
 export async function filterByCategory(category: string) {
   try {
     const response = await axios.get(`${baseURL}/filter.php`, {
