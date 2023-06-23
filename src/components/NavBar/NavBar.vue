@@ -5,7 +5,6 @@
     <nav class="nav">
       <RouterLink class="nav-link" data-testid="home-link" to="/">Home</RouterLink>
       <RouterLink class="nav-link" data-testid="about-link" to="/about">About</RouterLink>
-      <RouterLink class="nav-link" data-testid="salim-link" to="/salim">Salim</RouterLink>
     </nav>
   </header>
 </template>
