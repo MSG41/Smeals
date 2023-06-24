@@ -71,7 +71,10 @@ export default {
 
     // Compute whether the RandomCard component should be shown
     const shouldShowRandomCard = computed(() => {
-      return !hasResults.value && store.selectedArea === '' && store.selectedCategory === ''
+      return (
+        !hasResults.value ||
+        (store.meals.length === 0 && store.selectedArea === '' && store.selectedCategory === '')
+      )
     })
 
     return {

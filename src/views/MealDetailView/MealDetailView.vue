@@ -1,6 +1,8 @@
 <template>
   <!-- Only display the meal details if a meal has been fetched -->
   <div v-if="meal" class="meal-detail-view">
+    <button class="back-button" @click="goBack">Go Back</button>
+
     <h1>{{ meal.strMeal }}</h1>
     <img :src="meal.strMealThumb" alt="" />
     <!-- If a YouTube link is available, embed the video -->
@@ -28,7 +30,7 @@
 
 <script lang="ts">
 import { onMounted, ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { getMealDetails } from '@/services/mealService'
 import type { Meal } from '@/types/types'
 
@@ -39,6 +41,7 @@ export default {
     // Initialize refs for meal and the current route
     const meal = ref<Meal | null>(null)
     const route = useRoute()
+    const router = useRouter()
 
     // Computed property for listing the ingredients and measures
     const ingredients = computed(() => {
@@ -74,7 +77,10 @@ export default {
     6
     onMounted(fetchMeal)
 
-    return { meal, ingredients }
+    const goBack = () => {
+      router.go(-1)
+    }
+    return { meal, ingredients, goBack }
   }
 }
 </script>
