@@ -35,6 +35,17 @@ $dark-color: #666;
   text-align: center;
 }
 
+.no-results-message {
+  text-align: center;
+  font-size: 1.2em;
+  color: #444;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #f2f2f2;
+  font-weight: normal;
+  margin-bottom: 20px;
+}
+
 .meal-card {
   display: flex;
   flex-direction: column;

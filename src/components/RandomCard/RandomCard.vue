@@ -2,6 +2,11 @@
   <!-- Container for displaying a random meal -->
   <div v-if="randomMeal" class="card-container">
     <div class="card">
+      <!-- No results message -->
+      <div class="no-results-message">
+        No meals found. Please adjust the filters to find a match.
+      </div>
+
       <!-- Title -->
       <h1 class="title">Random meal</h1>
 
