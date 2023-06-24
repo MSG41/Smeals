@@ -12,7 +12,8 @@ header {
   width: 100%;
   max-height: 80px;
   z-index: 3;
-  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px); /* For iOS */
+  backdrop-filter: blur(20px); /* For non-iOS browsers */
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
   box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);

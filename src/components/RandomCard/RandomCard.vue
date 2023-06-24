@@ -3,9 +3,7 @@
   <div v-if="randomMeal" class="card-container">
     <div class="card">
       <!-- No results message -->
-      <div class="no-results-message">
-        No meals found. Please adjust the filters to find a match.
-      </div>
+      <div class="no-results-message">No meals found. Please modify filters.</div>
 
       <!-- Title -->
       <h1 class="title">Random meal</h1>
