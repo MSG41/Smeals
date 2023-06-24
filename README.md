@@ -80,7 +80,7 @@ The Smeals application should now be up and running on your local machine!
 
 - **Store with Pinia**: Implement the store (state management) using Pinia, a modern Vue state management library. Create a separate `store` folder in the `src` directory to house your store-related files. Within this folder, include store modules, actions, mutations, and getters as needed. Pinia provides a reactive and easy-to-use store API that integrates seamlessly with Vue components.
 
-- **Tests with Vitest**: Vitest is a testing library used for writing tests in your project. Create a `tests` folder within each component folder to hold the corresponding test files. Place the test files directly alongside the component and SCSS files. Vitest offers a comprehensive testing framework with features like assertions, mocking, and test runners, allowing you to thoroughly test your components and ensure their functionality.
+- **Tests with Vitest**: Vitest is a testing library used for writing tests in your project. Place the test files directly alongside the component and SCSS files. Vitest offers a comprehensive testing framework with features like assertions, mocking, and test runners, allowing you to thoroughly test your components and ensure their functionality.
 
 ### Included Framework and Libraries
 
