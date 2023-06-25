@@ -21,7 +21,9 @@ export const useHomeStore = defineStore('home', {
     areas: [] as string[],
     categories: [] as string[],
     selectedArea: '',
-    selectedCategory: ''
+    selectedCategory: '',
+    mealCount: 0,
+    statusMessage: ''
   }),
   actions: {
     async fetchRandomMeal(): Promise<Meal | null> {
@@ -76,6 +78,12 @@ export const useHomeStore = defineStore('home', {
         }
 
         this.meals = meals
+        this.mealCount = meals.length
+        if (this.selectedCategory || this.selectedArea) {
+          this.statusMessage = meals.length > 0 ? `Found ${meals.length} meals` : 'No meals found'
+        } else {
+          this.statusMessage = ''
+        }
       } catch (error) {
         console.error('Failed to fetch meals:', error)
       } finally {
@@ -101,6 +109,12 @@ export const useHomeStore = defineStore('home', {
         }
 
         this.meals = meals
+        this.mealCount = meals.length
+        if (query.trim() !== '' || this.selectedArea || this.selectedCategory) {
+          this.statusMessage = meals.length > 0 ? `Found ${meals.length} meals` : 'No meals found'
+        } else {
+          this.statusMessage = ''
+        }
       } catch (error) {
         console.error('Failed to search meals:', error)
       } finally {
