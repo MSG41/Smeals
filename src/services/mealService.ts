@@ -39,37 +39,29 @@ export async function searchMeal(query: string) {
 // Fetches meals based on filter parameters
 export async function filterMeals({ area = '', category = '' }: Record<string, string>) {
   try {
-    let meals: Meal[] = []
-    let filteredMeals: Meal[] = []
+    const response = await axios.get(`${baseURL}/filter.php`, {
+      params: { c: category }
+    })
 
-    // Get meals by category
-    if (category) {
-      const responseCategory = await axios.get(`${baseURL}/filter.php`, {
-        params: { c: category }
-      })
-      meals = responseCategory.data.meals || []
-    }
+    const mealsByCategory: Meal[] = response.data.meals || []
 
-    // If area is also provided, filter the meals by area
-    if (area && meals.length > 0) {
+    if (area) {
       const responseArea = await axios.get(`${baseURL}/filter.php`, {
         params: { a: area }
       })
-      const areaMeals = responseArea.data.meals || []
-      filteredMeals = meals.filter((meal: Meal) =>
-        areaMeals.find((m: Meal) => m.idMeal === meal.idMeal)
+
+      const mealsByArea: Meal[] = responseArea.data.meals || []
+
+      const filteredMeals = mealsByCategory.filter((meal: Meal) =>
+        mealsByArea.some((m: Meal) => m.idMeal === meal.idMeal)
       )
+
+      return filteredMeals
+    } else if (category) {
+      return mealsByCategory
     }
 
-    // If there's no category, get meals by area
-    if (!category && area) {
-      const responseArea = await axios.get(`${baseURL}/filter.php`, {
-        params: { a: area }
-      })
-      meals = responseArea.data.meals || []
-    }
-
-    return filteredMeals.length > 0 ? filteredMeals : meals
+    return []
   } catch (err) {
     console.error('Failed to fetch meals:', err)
     throw err
