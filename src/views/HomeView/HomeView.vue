@@ -3,6 +3,8 @@
     <div class="header">
       <!-- Display the header banner image -->
       <img src="@/assets/banner.jpg" alt="Cooking Recipes" class="banner-image" />
+      <!-- Display the status message -->
+      <div>{{ store.statusMessage }}</div>
 
       <!-- Render the Search component for searching meals -->
       <Search class="search-bar" />

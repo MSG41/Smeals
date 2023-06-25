@@ -1,5 +1,6 @@
 // A set of functions that interact with an external API (The Meal DB API) to fetch meal-related data.
 import axios from 'axios'
+import { type Meal } from '@/types/types'
 
 const baseURL = 'https://www.themealdb.com/api/json/v1/1'
 
@@ -36,16 +37,42 @@ export async function searchMeal(query: string) {
 }
 
 // Fetches meals based on filter parameters
-export async function filterMeals(params: Record<string, string>) {
+export async function filterMeals({ area = '', category = '' }: Record<string, string>) {
   try {
-    const response = await axios.get(`${baseURL}/filter.php`, {
-      params
-    })
-    const meals = response.data.meals || []
-    return meals
-  } catch (error) {
-    console.error('Failed to fetch filtered meals:', error)
-    throw new Error('Failed to fetch filtered meals')
+    let meals: Meal[] = []
+    let filteredMeals: Meal[] = []
+
+    // Get meals by category
+    if (category) {
+      const responseCategory = await axios.get(`${baseURL}/filter.php`, {
+        params: { c: category }
+      })
+      meals = responseCategory.data.meals || []
+    }
+
+    // If area is also provided, filter the meals by area
+    if (area && meals.length > 0) {
+      const responseArea = await axios.get(`${baseURL}/filter.php`, {
+        params: { a: area }
+      })
+      const areaMeals = responseArea.data.meals || []
+      filteredMeals = meals.filter((meal: Meal) =>
+        areaMeals.find((m: Meal) => m.idMeal === meal.idMeal)
+      )
+    }
+
+    // If there's no category, get meals by area
+    if (!category && area) {
+      const responseArea = await axios.get(`${baseURL}/filter.php`, {
+        params: { a: area }
+      })
+      meals = responseArea.data.meals || []
+    }
+
+    return filteredMeals.length > 0 ? filteredMeals : meals
+  } catch (err) {
+    console.error('Failed to fetch meals:', err)
+    throw err
   }
 }
 

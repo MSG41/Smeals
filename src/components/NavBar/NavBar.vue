@@ -2,8 +2,9 @@
   <!-- Navigation bar header -->
   <header class="header">
     <!-- Vue logo -->
-    <img alt="Vue logo" class="logo" src="@/assets/SML.png" width="90" height="80" />
-
+    <RouterLink to="/">
+      <img alt="Vue logo" class="logo" src="@/assets/SML.png" width="90" height="80" />
+    </RouterLink>
     <!-- Navigation links -->
     <nav class="nav">
       <RouterLink class="nav-link" data-testid="home-link" to="/">Home</RouterLink>

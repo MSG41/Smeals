@@ -1,17 +1,11 @@
-// One consistent source of truth.
-
-// This approach is more maintainable because it concentrates all the data-fetching logic in the store and uses the store as the single source of truth for data.
-
 import { defineStore } from 'pinia'
 import {
   getAreas,
   getCategories,
   filterMeals,
-  filterByArea,
-  filterByCategory,
-  getRandomMeal
+  getRandomMeal,
+  searchMeal
 } from '@/services/mealService'
-import { searchMeal } from '@/services/mealService'
 import type { Meal } from '@/types/types'
 
 export const useHomeStore = defineStore('home', {
@@ -21,9 +15,13 @@ export const useHomeStore = defineStore('home', {
     areas: [] as string[],
     categories: [] as string[],
     selectedArea: '',
-    selectedCategory: ''
+    selectedCategory: '',
+    mealCount: 0,
+    statusMessage: '',
+    currentQuery: ''
   }),
   actions: {
+    // Fetches a random meal
     async fetchRandomMeal(): Promise<Meal | null> {
       this.isLoading = true
       try {
@@ -37,6 +35,7 @@ export const useHomeStore = defineStore('home', {
       }
     },
 
+    // Fetches all areas and categories
     async fetchData() {
       this.isLoading = true
       try {
@@ -48,34 +47,31 @@ export const useHomeStore = defineStore('home', {
       }
     },
 
+    // Fetches meals based on current state
     async fetchMeals() {
       this.isLoading = true
       try {
-        const meals: Meal[] = []
+        const filter = {
+          category: this.selectedCategory,
+          area: this.selectedArea
+        }
 
-        if (this.selectedCategory && this.selectedArea) {
-          // Fetch meals filtered by category
-          const categoryMeals = await filterByCategory(this.selectedCategory)
+        // If a category or area is selected, apply filter
+        let meals: Meal[] =
+          this.selectedCategory || this.selectedArea ? await filterMeals(filter) : []
 
-          // Fetch meals filtered by area
-          const areaMeals = await filterByArea(this.selectedArea)
-
-          // Find the meals that match both category and area
-          for (const meal of categoryMeals) {
-            if (areaMeals.some((areaMeal: Meal) => areaMeal.idMeal === meal.idMeal)) {
-              meals.push(meal)
-            }
-          }
-        } else if (this.selectedCategory) {
-          meals.push(...(await filterByCategory(this.selectedCategory)))
-        } else if (this.selectedArea) {
-          meals.push(...(await filterByArea(this.selectedArea)))
-        } else {
-          // No category or area selected, fetch all meals
-          meals.push(...(await filterMeals({})))
+        // If a search query is present, apply search on top of filters
+        if (this.currentQuery.trim() !== '') {
+          const searchResult = await searchMeal(this.currentQuery)
+          meals =
+            meals.length > 0
+              ? meals.filter((meal) => searchResult.some((m: Meal) => m.idMeal === meal.idMeal))
+              : searchResult
         }
 
         this.meals = meals
+        this.mealCount = meals.length
+        this.updateStatusMessage()
       } catch (error) {
         console.error('Failed to fetch meals:', error)
       } finally {
@@ -83,42 +79,36 @@ export const useHomeStore = defineStore('home', {
       }
     },
 
-    async searchMeals(query: string) {
-      this.isLoading = true
-      try {
-        if (query.trim() === '') {
-          this.fetchMeals()
-          return
-        }
-
-        let meals: Meal[] = []
-        if (this.selectedArea || this.selectedCategory) {
-          const lowerCaseQuery = query.toLowerCase()
-          meals = this.meals.filter((meal) => meal.strMeal.toLowerCase().includes(lowerCaseQuery))
-        } else {
-          // If no filters are selected, fetch all meals matching the search query
-          meals = await searchMeal(query)
-        }
-
-        this.meals = meals
-      } catch (error) {
-        console.error('Failed to search meals:', error)
-      } finally {
-        this.isLoading = false
-      }
+    // Updates the current search query and fetches meals
+    searchMeals(query: string) {
+      this.currentQuery = query
+      this.fetchMeals()
     },
 
+    // Updates the selected area and fetches meals
     setSelectedArea(area: string) {
       this.selectedArea = area
       this.fetchMeals()
     },
 
+    // Updates the selected category and fetches meals
     setSelectedCategory(category: string) {
       this.selectedCategory = category
       this.fetchMeals()
+    },
+
+    // Updates the status message based on current state
+    updateStatusMessage() {
+      if (this.currentQuery.trim() || this.selectedArea || this.selectedCategory) {
+        this.statusMessage = this.mealCount > 0 ? `Found ${this.mealCount} meals` : 'No meals found'
+      } else {
+        this.statusMessage = 'Please select a filter or search for meals'
+      }
     }
   },
+
   getters: {
+    // Decides whether to show the random card based on current state
     showRandomCard(): boolean {
       return this.meals.length === 0 && !this.selectedArea && !this.selectedCategory
     }
