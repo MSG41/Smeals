@@ -39,29 +39,35 @@ export async function searchMeal(query: string) {
 // Fetches meals based on filter parameters
 export async function filterMeals({ area = '', category = '' }: Record<string, string>) {
   try {
-    const response = await axios.get(`${baseURL}/filter.php`, {
-      params: { c: category }
-    })
+    let meals: Meal[] = []
 
-    const mealsByCategory: Meal[] = response.data.meals || []
+    if (area && category) {
+      const response = await axios.get(`${baseURL}/filter.php`, {
+        params: { c: category }
+      })
+      const mealsByCategory: Meal[] = response.data.meals || []
 
-    if (area) {
       const responseArea = await axios.get(`${baseURL}/filter.php`, {
         params: { a: area }
       })
-
       const mealsByArea: Meal[] = responseArea.data.meals || []
 
-      const filteredMeals = mealsByCategory.filter((meal: Meal) =>
+      meals = mealsByCategory.filter((meal: Meal) =>
         mealsByArea.some((m: Meal) => m.idMeal === meal.idMeal)
       )
-
-      return filteredMeals
     } else if (category) {
-      return mealsByCategory
+      const response = await axios.get(`${baseURL}/filter.php`, {
+        params: { c: category }
+      })
+      meals = response.data.meals || []
+    } else if (area) {
+      const response = await axios.get(`${baseURL}/filter.php`, {
+        params: { a: area }
+      })
+      meals = response.data.meals || []
     }
 
-    return []
+    return meals
   } catch (err) {
     console.error('Failed to fetch meals:', err)
     throw err
